@@ -12,7 +12,7 @@ public class Curso {
 	private List<Usuario> suscriptores=new ArrayList<Usuario>();
 	private List<Leccion> lecciones=new ArrayList<Leccion>();
 	
-	public static final int MAX_BECADOS=5;
+	private static final int MAX_BECADOS=5;
 	
 	public Curso(int id,String titulo,double precio,int valor) {
 		this.idCurso=id;
@@ -23,34 +23,6 @@ public class Curso {
 
 	public int getIdCurso() {
 		return idCurso;
-	}
-
-	public void setIdCurso(int idCurso) {
-		this.idCurso = idCurso;
-	}
-
-	public String getTitulo() {
-		return titulo;
-	}
-
-	public void setTitulo(String titulo) {
-		this.titulo = titulo;
-	}
-
-	public double getPrecio() {
-		return precio;
-	}
-
-	public void setPrecio(double precio) {
-		this.precio = precio;
-	}
-
-	public int getValoracion() {
-		return valoracion;
-	}
-
-	public void setValoracion(int valoracion) {
-		this.valoracion = valoracion;
 	}
 	
 	public Usuario getAutor() {
@@ -67,68 +39,68 @@ public class Curso {
 		}
 		return resultado;
 	}
+	
+	public void mostrarDatos() {
+			System.out.println("-------------------");
+			System.out.println("idCurso: "+this.idCurso);
+			System.out.println("Nombre: "+this.titulo);
+			System.out.println("Precio: $"+this.precio);
+			System.out.println("Valoración: "+this.valoracion);
+		}
 
 	public void getSuscriptores() {
 		for (Usuario suscriptor : suscriptores) {
-			System.out.println("-------------------");
-			System.out.println("idUsuario: "+suscriptor.getId());
-			System.out.println("Nombre: "+suscriptor.getNombre());
-			System.out.println("Correo electronico: "+suscriptor.getMail());
-			System.out.println("¿Es becario?: "+suscriptor.isEsBecario());
+			suscriptor.mostrarDatos();
 		}
 	}
 	
 	
-
 	public void agregarSuscriptores(Usuario nuevo) {
-		
 		suscriptores.add(nuevo);
 	}
 
 	public void getLecciones() {
 		for (Leccion leccion : lecciones) {
-			System.out.println("-------------------");
-			System.out.println("Nombre: "+leccion.getNombre());
-			System.out.println("Duración en minutos: "+leccion.getDuracion());
-			System.out.println("Tipo de lección: "+leccion.getTipoDeLeccion());
+			leccion.mostrarDatos();
 		}
 		
 	}
 
-	
 	public void agregarLecciones(Leccion nueva) {
 		lecciones.add(nueva);
 	}
 	
 	public boolean estaSuscripto(int idUsuario) {
 		boolean estaSuscripto=false;
-		for (Usuario usuario : suscriptores) {
+		int contador=0;
+		while(!estaSuscripto&&contador<this.suscriptores.size()) {
+			Usuario usuario=this.suscriptores.get(contador);
 			if(usuario.getId()==idUsuario) {
 				estaSuscripto=true;
 			}
+			contador++;
 		}
 		return estaSuscripto;
 	}
 	
-	public boolean superaBecarios(Usuario usuarioNuevo) {
-		  if(!usuarioNuevo.isEsBecario()) {
-		        return false;
-		    }
-		
-	    int contadorBecario = 0;
-	    
-	    for (Usuario usuario : suscriptores) {
-	        if(usuario.isEsBecario()) {
-	            contadorBecario++;
-	        }
-	    }
-	    
-	    if(contadorBecario >= MAX_BECADOS) {  
-	        return true;   
-	    }
-	    
-	    return false;  
+	public boolean superaBecarios() {
+		boolean resultado=false;
+		int becarios=cantidadDeBecarios();
+		if(becarios>=MAX_BECADOS) {
+			resultado=true;
+		}
+		return resultado;
 	}
-
+	
+	private int cantidadDeBecarios() {
+		  int becarios = 0;
+		    for (Usuario usuario : suscriptores) {
+		        if(usuario.getBecario()) {
+		            becarios++;
+		        }
+	      
+	}
+		    return becarios;
+	}
 
 }

@@ -22,7 +22,6 @@ public class Usuario {
 		this.id = id;
 	}
 	
-
 	public String getNombre() {
 		return nombre;
 	}
@@ -39,14 +38,30 @@ public class Usuario {
 		this.mail = mail;
 	}
 
-	public boolean isEsBecario() {
-		return esBecario;
+	public String isEsBecario() {
+		String becado=null;
+		if(esBecario) {
+			becado="si";
+		}else {
+			becado="no";
+		}
+		return becado;
 	}
 	
+	public boolean getBecario() {
+		return esBecario;
+	}
 
 	public void setEsBecario(boolean esBecario) {
 		this.esBecario = esBecario;
 	}
-	
+
+	public void mostrarDatos() {
+		System.out.println("-------------------");
+		System.out.println("idUsuario: "+id);
+		System.out.println("Nombre: "+nombre);
+		System.out.println("Correo electronico: "+mail);
+		System.out.println("¿Es becario?: "+isEsBecario());
+	}
 
 }

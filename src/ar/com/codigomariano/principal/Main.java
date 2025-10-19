@@ -82,14 +82,39 @@ public class Main {
 		
 		//Sistema de inscripcion
 		menuPrincipal(scanner,instituto1);
+		//programacion.mostrarSuscriptores(1);
 		scanner.close();
-		
+	
+	
 		
 	}
 		
 		private static void menuPrincipal(Scanner scanner,Instituto instituto) {
 			boolean salir=false;
 			while(!salir) {
+				int opcion=menu(scanner);
+				if(opcion==1) {
+					instituto.agregaNuevoUsuario(scanner);
+				}else if(opcion==2) {
+					instituto.mostrarUsuarios();
+				}else if(opcion==3) {
+					instituto.getCategorias();
+				}else if(opcion==4) {
+					opcionCuatro(instituto,scanner);
+				}else if(opcion==5) {
+					opcionCinco(instituto,scanner);
+				}else if(opcion==6) {
+					opcionSeis(instituto,scanner);
+				}else if(opcion==0) {
+					System.out.println("Saliendo del programa");
+					salir=true;					
+				}else {
+					System.out.println("Opción invalida.Intente nuevamente");
+				}
+			
+			}
+		}
+			private static int menu(Scanner sc) {
 				System.out.println("------------------------------------------------------");
 				System.out.println("\u001B[31m"+"\u001B[47m"+"****Bienvenido al sistema de Inscripción de cursos****"+"\u001B[0m");
 				System.out.println("------------------------------------------------------");
@@ -102,47 +127,37 @@ public class Main {
 				System.out.println("0.Salir del sistema");
 				System.out.println("------------------------------------------------------");
 				System.out.print("Seleccione una opcion: ");
-				int opcion=scanner.nextInt();
-				if(opcion==1) {
-					instituto.agregaNuevoUsuario(scanner);
-				}else if(opcion==2) {
-					instituto.mostrarUsuarios();
-				}else if(opcion==3) {
-					instituto.getCategorias();
-				}else if(opcion==4) {
-					System.out.print("¿Cual es el id de la categoria?: ");
-					int categoria=scanner.nextInt();
-					instituto.mostrarCursos(categoria);
-				}else if(opcion==5) {
-					System.out.print("¿Cual es el id de la categoria?: ");
-					int idCategoria=scanner.nextInt();
-					System.out.print("¿Cual es el id del curso?: ");
-					int idCurso=scanner.nextInt();
-					instituto.encontrarCategoria(idCategoria).mostrarSuscriptores(idCurso);
-				}else if(opcion==6) {
-					System.out.print("¿Cual es el id del usuario?: ");
-					int idUsuario=scanner.nextInt();
-					System.out.print("¿Cual es el id del curso?: ");
-					int iDCurso=scanner.nextInt();
-					String resultado=instituto.suscribirseACurso(idUsuario, iDCurso);
-					System.out.println("------------------------");
-					System.out.println("\033[1m"+resultado+"\033[1m");
-				}else if(opcion==0) {
-					System.out.println("Saliendo del programa");
-					salir=true;					
-				}else {
-					System.out.println("Opción invalida.Intente nuevamente");
-				}
-			
+				int opcion=sc.nextInt();
+				return opcion;
 			}
 			
-			
-			
+			private static int datosIngresados(String texto,Scanner scanner) {
+				int dato=0;
+				System.out.print(texto);
+				dato=scanner.nextInt();
+				return dato;
+			}
+			private static void opcionCuatro(Instituto ins, Scanner sc) {
+			int categoria=datosIngresados("¿Cual es el id de la categoria?: ",sc);
+			ins.mostrarCursosPorCategoria(categoria);
+			}
+			private static void opcionCinco(Instituto instituto, Scanner scanner) {
+				int idCategoria=datosIngresados("¿Cual es el id de la categoria?: ",scanner);
+				int idCurso=datosIngresados("¿Cual es el id del curso?: ",scanner);
+				instituto.encontrarCategoria(idCategoria).mostrarSuscriptores(idCurso);
+			}
+			private static void opcionSeis(Instituto instituto,Scanner scanner) {
+				int idUsuario=datosIngresados("¿Cual es el id del usuario?: ",scanner);
+				int idCurso=datosIngresados("¿Cual es el id del curso?: ",scanner);
+				String resultado=instituto.suscribirseACurso(idUsuario, idCurso);
+				System.out.println("------------------------");
+				System.out.println("\033[1m"+resultado+"\033[1m");
+			}
 			
 		}
 
 
-	}
+	
 	
 	
 

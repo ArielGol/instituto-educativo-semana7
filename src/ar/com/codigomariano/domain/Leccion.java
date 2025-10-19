@@ -34,6 +34,11 @@ public class Leccion {
 		return tipoDeLeccion.getTipoDeLeccion();
 	}
 	
-	
+	public void mostrarDatos() {
+		System.out.println("-------------------");
+		System.out.println("Nombre: "+nombre);
+		System.out.println("Duración en minutos: "+duracion);
+		System.out.println("Tipo de lección: "+tipoDeLeccion);
+	}
 
 }

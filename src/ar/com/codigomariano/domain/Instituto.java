@@ -1,7 +1,6 @@
 package ar.com.codigomariano.domain;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,117 +12,112 @@ public class Instituto {
 	
 	
 	public void mostrarUsuarios() {
-		for (Usuario usuario : usuarios) {
-			System.out.println("-------------------");
-			System.out.println("idUsuario: "+usuario.getId());
-			System.out.println("Nombre: "+usuario.getNombre());
-			System.out.println("Correo electronico: "+usuario.getMail());
-			System.out.println("¿Es becario?: "+usuario.isEsBecario());
+		for (Usuario usuario : this.usuarios) {
+			usuario.mostrarDatos();
 		}
 		
 	}
-	
-	
 	
 	public void agregaNuevoUsuario(Scanner scanner) {  
 	    System.out.print("Escriba el id: ");
 	    int idUsuario = scanner.nextInt();
 	    scanner.nextLine(); 
-	    System.out.print("Escriba tu nombre: ");
-	    String nombre = scanner.nextLine();
-	    System.out.print("Escriba tu mail: ");
-	    String mail = scanner.nextLine();
-	    System.out.print("¿Es becado? (si/no): ");
-	    String esBecado = scanner.nextLine();
+	    String nombre=datosIngresados("Escriba tu nombre: ",scanner);
+	    String mail=datosIngresados("Escriba tu mail: ",scanner);
+	    String esBecado=datosIngresados("¿Es becado? (si/no): ",scanner);
 	    boolean becado = esBecado.equals("si");
 	    Usuario nuevo = new Usuario(idUsuario, nombre, mail, becado);
-	    usuarios.add(nuevo);
+	    agregarUsuarioAListado(nuevo);
 	    System.out.println("Usuario agregado exitosamente!");
 	}
 	
+	private String datosIngresados(String texto,Scanner sc) {
+		String dato=null;
+		System.out.print(texto);
+	    dato = sc.nextLine();
+	    return dato;
+	}
+	
 	public void agregarUsuarioAListado(Usuario usuario) {
-		usuarios.add(usuario);
+		this.usuarios.add(usuario);
 	}
 
 
 	
 	public Usuario encontrarUsuario(int idUsuario) {
 	    Usuario encontrado = null;
-	    for (Usuario usuario : usuarios) {  
+	    int contador=0;
+	    while(encontrado==null&&contador<this.usuarios.size()) {
+	    	Usuario usuario=this.usuarios.get(contador);  
 	        if(usuario.getId() == idUsuario) {
 	            encontrado = usuario;
-	            break; 
 	        }
+	        contador++;
 	    }
-	    
 	    return encontrado;
 	}
+	
+	
 	public Categoria encontrarCategoria(int id) {
 		Categoria encontrada=null;
-		for (Categoria categoria : categorias) {
+		int contador=0;
+		while(encontrada==null&&contador<this.categorias.size()) {
+			Categoria categoria=this.categorias.get(contador);
 			if(categoria.getIdCategoria()==id) {
 				encontrada=categoria;
-				break;
 			}
+			contador++;
 		}
 		return encontrada;
 	}
-	public void mostrarCursos(int idCategoria) {
-		Categoria seleccionada=null;
-		for (Categoria categoria : categorias) {
-			if(categoria.getIdCategoria()==idCategoria) {
-				seleccionada=categoria;
-				break;
-			}
-		}
-		seleccionada.getCursos();
-	}
 	
+	
+	public void mostrarCursosPorCategoria(int idCategoria) {
+		Categoria seleccionada=encontrarCategoria(idCategoria);
+		if(seleccionada!=null) seleccionada.mostrarCursos();
+	}
 	
 	
 	public String suscribirseACurso(int idUsuario, int idCurso) {
 	    String resultado = null;
 	    Usuario usuario = encontrarUsuario(idUsuario);
-	    Curso cursoASuscribir = null;
+	    Curso cursoASuscribir =encontrarCursoPorCategoria(idCurso);
 	    if(usuario == null) {
-	        return Mensaje.USUARIO_INEX.getMensaje();
-	    }
-	    for (Categoria categoria : categorias) {
-	        cursoASuscribir = categoria.encontrarCurso(idCurso);
-	        if(cursoASuscribir != null) {
-	            break;
-	        }
+	       return resultado=Mensaje.USUARIO_INEX.getMensaje();
 	    }
 	    if(cursoASuscribir == null) {
-	        return Mensaje.CURSO_INEX.getMensaje();
-	    }
-	    if(cursoASuscribir.esAutor(idUsuario)) {
-	        return Mensaje.ES_AUTOR.getMensaje();
-	    }
+	        resultado=Mensaje.CURSO_INEX.getMensaje();
+	    }else if(cursoASuscribir.esAutor(idUsuario)) {
+	        resultado=Mensaje.ES_AUTOR.getMensaje();
+	    }else if(cursoASuscribir.estaSuscripto(idUsuario)) {
+	        resultado=Mensaje.YA_SUSCRIPTO.getMensaje();
+	    }else if(cursoASuscribir.superaBecarios()) {
+	        resultado=Mensaje.MAX_BECADOS.getMensaje();
+	    }else {
 	    
-	    if(cursoASuscribir.estaSuscripto(idUsuario)) {
-	        return Mensaje.YA_SUSCRIPTO.getMensaje();
-	    }
-	    if(cursoASuscribir.superaBecarios(usuario)) {
-	        return Mensaje.MAX_BECADOS.getMensaje();
-	    }
 	    cursoASuscribir.agregarSuscriptores(usuario);
 	    resultado=Mensaje.SUSCRIPTO_OK.getMensaje();
+	    }
 	    return resultado;
 	}
-		
-		
+	
 	public void agregarCategorias(Categoria nueva) {
-		categorias.add(nueva);
+		this.categorias.add(nueva);
 	}
 	public void getCategorias() {
-		for (Categoria categoria : categorias) {
-			System.out.println("-------------------");
-			System.out.println("Id : "+categoria.getIdCategoria());
-			System.out.println("Nombre : "+categoria.getNombre());
-
+		for (Categoria categoria : this.categorias) {
+			categoria.mostrarDatos();
 		}
-		
+	}
+	private Curso encontrarCursoPorCategoria(int id) {
+		Curso curso =null;
+		int contador=0;
+		while(curso==null&&contador<this.categorias.size()) {
+		    Categoria categoria=this.categorias.get(contador);
+		    curso=categoria.encontrarCurso(id);
+		    contador++;
+		        }
+		return curso;
 	}
 
 }
